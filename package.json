@@ -1,0 +1,19 @@
+{
+  "name": "node-tilelayer-clip",
+  "version": "0.0.0",
+  "description": "node-tilelayer-clip",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deyihu/node-tilelayer-clip.git"
+  },
+  "devDependencies": {},
+  "peerDependencies": {},
+  "dependencies": {
+    "@mapbox/sphericalmercator": "^1.1.0",
+    "@turf/turf": "^5.1.6",
+    "canvas": "^1.6.5",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
+  }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tilelayer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.css" />
+  <style>
+    html,
+    body,
+    #map {
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div id="map"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
+  <script type="text/javascript">
+    var map = L.map('map').setView([120.72438427062991, 31.300479082673263].reverse(), 13);
+
+
+    // var tilelayer = L.tileLayer('https://mt2.google.cn/maps/vt?lyrs=s&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}', {
+    //   attribution: ''
+    // });
+    // tilelayer.addTo(map);
+
+
+    var tilelayer1 = L.tileLayer('http://localhost:8080/tilelayer', {
+      attribution: ''
+    });
+
+
+    tilelayer1.getTileUrl = function (coords) {
+      var x = coords.x, y = coords.y, z = coords.z;
+      var bounds = this._tileCoordsToBounds(coords);
+      var _southWest = bounds.getSouthWest();
+      var _northEast = bounds.getNorthEast();
+      var arr = [_southWest.lng, _southWest.lat, _northEast.lng, _northEast.lat];
+      arr.join(',');
+      bounds = arr.toString();
+      var url = this._url + '?z={z}&x={x}&y={y}&lnglats={lnglats}';
+      url = url.replace('{z}', z).replace('{x}', x).replace('{y}', y).replace('{lnglats}', bounds);
+      return url;
+    }
+
+    tilelayer1.addTo(map);
+
+    fetch('./export.geojson').then(res => res.json()).then(geojson => {
+      L.geoJson(geojson).addTo(map);
+    });
+  </script>
+
+</body>
+
+</html>
