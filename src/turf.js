@@ -4,31 +4,25 @@ const merc = new SphericalMercator({
     size: 256
 });
 
-const geodata = require('./data');
-const polygon = turf.polygon(geodata.features[0].geometry.coordinates);
-const mcoords = geodata.features[0].geometry.coordinates[0].map(c => {
-    return merc.forward(c);
-});
-
 function forward(c) {
     return merc.forward(c);
 }
 
-function contains(lnglats) {
+function contains(lnglats, polygon) {
     const lnglatArray = lnglats.split(',');
     const [minx, miny, maxx, maxy] = lnglatArray;
     const bound = turf.bboxPolygon([parseFloat(minx), parseFloat(miny), parseFloat(maxx), parseFloat(maxy)]);
     return turf.booleanContains(polygon, bound);
 }
 
-function disjoint(lnglats) {
+function disjoint(lnglats, polygon) {
     const lnglatArray = lnglats.split(',');
     const [minx, miny, maxx, maxy] = lnglatArray;
     const bound = turf.bboxPolygon([parseFloat(minx), parseFloat(miny), parseFloat(maxx), parseFloat(maxy)]);
     return turf.booleanDisjoint(polygon, bound);
 }
 
-function cross(lnglats) {
+function cross(lnglats, polygon) {
     const lnglatArray = lnglats.split(',');
     const [minx, miny, maxx, maxy] = lnglatArray;
     const bound = turf.bboxPolygon([parseFloat(minx), parseFloat(miny), parseFloat(maxx), parseFloat(maxy)]);
@@ -50,5 +44,5 @@ function cross(lnglats) {
 // console.log(disjoint(lnglats));
 
 module.exports = {
-    contains, disjoint, cross, mcoords, forward
+    contains, disjoint, cross, forward
 };

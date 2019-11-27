@@ -1,25 +1,26 @@
 const Canvas = require('canvas');
 const Image = Canvas.Image;
-const Turf = require('./turf');
 const drawUtil = (module.exports = {});
 const TILESIZE = 256;
+const TURF = require('../src/turf');
+
 
 //计算像素坐标
-function calXY(lnglats) {
+function calXY(lnglats, mcoords) {
     const lnglatArray = lnglats.split(',');
     const [minlng, minlat, maxlng, maxlat] = lnglatArray;
     // const xAverage = TILESIZE / (maxlng - minlng);//单位经度对应的像素个数
     // const yAverage = TILESIZE / (maxlat - minlat);//单位纬度对应的像素个数
     let mercatorminlng, mercatormaxlng, mercatorminlat, mercatormaxlat;
-    const minLngLat = Turf.forward([minlng, minlat]);
-    const maxLngLat = Turf.forward([maxlng, maxlat]);
+    const minLngLat = TURF.forward([minlng, minlat]);
+    const maxLngLat = TURF.forward([maxlng, maxlat]);
     mercatorminlng = minLngLat[0];
     mercatormaxlng = maxLngLat[0];
     mercatorminlat = minLngLat[1];
     mercatormaxlat = maxLngLat[1];
     const mecatorxAverage = TILESIZE / (mercatormaxlng - mercatorminlng);
     const mecatoryAverage = TILESIZE / (mercatormaxlat - mercatorminlat);
-    return Turf.mcoords.map(c => {
+    return mcoords.map(c => {
         const [lng, lat] = c;
         x = (lng - mercatorminlng) * mecatorxAverage;
         y = TILESIZE - (lat - mercatorminlat) * mecatoryAverage;
@@ -28,13 +29,13 @@ function calXY(lnglats) {
 }
 
 
-drawUtil.titleDraw = function (lnglats, imageStr) {
+drawUtil.titleDraw = function (lnglats, imageStr, mcoords) {
     const tileSize = 256;
     const canvas = new Canvas(tileSize, tileSize);
     canvas.width = tileSize;
     canvas.height = tileSize;
     const cxt = canvas.getContext('2d');
-    const xys = calXY(lnglats);
+    const xys = calXY(lnglats, mcoords);
     var time = 'draw time';
     console.time(time);
     drawUtil.clip(cxt, xys, imageStr);
