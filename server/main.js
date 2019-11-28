@@ -7,6 +7,7 @@ const ImageUtil = require('../src/ImageUtil');
 const drawutil = require('../src/drawUtil');
 const turf = require('@turf/turf');
 const TURF = require('../src/turf');
+const CONFIG = require('./../config');
 
 
 /**
@@ -60,8 +61,9 @@ router.get('/tilelayer', function (req, res) {
         return;
     }
     const { x, y, z, lnglats } = pararmObj;
-    const imagePath = './images/' + z + '/' + x + '/' + y + '.png';
+    const imagePath = `./images/${z}/${x}/${y}.png`;
     ImageUtil.getImage(imagePath, function (binaryData) {
+        //提取缓存图片
         if (binaryData) {
             successRes(res, binaryData);
         } else {
@@ -75,7 +77,8 @@ router.get('/tilelayer', function (req, res) {
                     x, y, z
                 });
             } else {
-                const url = `https://mt2.google.cn/maps/vt?lyrs=m&hl=zh-CN&gl=CN&x=${x}&y=${y}&z=${z}`;
+                //具体项目中应该换成自己的服务地址
+                const url = CONFIG.imageUrl.replace('{x}', x).replace('{y}', y).replace('{z}', z);
                 AjaxUtil.getImage(url).then(function readData(result) {
                     if (!result) {
                         errRes(res, 'error');

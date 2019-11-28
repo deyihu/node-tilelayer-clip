@@ -24,17 +24,16 @@
 <body>
 
   <div id="map"></div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.5.1/dist/leaflet.js"></script>
   <script type="text/javascript">
     var map = L.map('map').setView([120.72438427062991, 31.300479082673263].reverse(), 13);
 
 
-    // var tilelayer = L.tileLayer('https://mt2.google.cn/maps/vt?lyrs=s&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}', {
-    //   attribution: ''
-    // });
-    // tilelayer.addTo(map);
+    var tilelayer = L.tileLayer('https://mt2.google.cn/maps/vt?lyrs=s&hl=zh-CN&gl=CN&x={x}&y={y}&z={z}', {
+      attribution: ''
+    });
+    tilelayer.addTo(map);
 
 
     var tilelayer1 = L.tileLayer('http://localhost:8080/tilelayer', {
@@ -57,9 +56,9 @@
 
     tilelayer1.addTo(map);
 
-    fetch('./export.geojson').then(res => res.json()).then(geojson => {
-      L.geoJson(geojson).addTo(map);
-    });
+    // fetch('./export.geojson').then(res => res.json()).then(geojson => {
+    //   L.geoJson(geojson).addTo(map);
+    // });
   </script>
 
 </body>

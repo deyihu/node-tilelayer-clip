@@ -11,6 +11,8 @@ function calXY(lnglats, mcoords) {
     const [minlng, minlat, maxlng, maxlat] = lnglatArray;
     // const xAverage = TILESIZE / (maxlng - minlng);//单位经度对应的像素个数
     // const yAverage = TILESIZE / (maxlat - minlat);//单位纬度对应的像素个数
+
+    //墨卡托
     let mercatorminlng, mercatormaxlng, mercatorminlat, mercatormaxlat;
     const minLngLat = TURF.forward([minlng, minlat]);
     const maxLngLat = TURF.forward([maxlng, maxlat]);
@@ -20,10 +22,11 @@ function calXY(lnglats, mcoords) {
     mercatormaxlat = maxLngLat[1];
     const mecatorxAverage = TILESIZE / (mercatormaxlng - mercatorminlng);
     const mecatoryAverage = TILESIZE / (mercatormaxlat - mercatorminlat);
+    //墨卡托坐标转屏幕像素
     return mcoords.map(c => {
         const [lng, lat] = c;
-        x = (lng - mercatorminlng) * mecatorxAverage;
-        y = TILESIZE - (lat - mercatorminlat) * mecatoryAverage;
+        const x = (lng - mercatorminlng) * mecatorxAverage;
+        const y = TILESIZE - (lat - mercatorminlat) * mecatoryAverage;
         return [x, y];
     });
 }
@@ -36,10 +39,7 @@ drawUtil.titleDraw = function (lnglats, imageStr, mcoords) {
     canvas.height = tileSize;
     const cxt = canvas.getContext('2d');
     const xys = calXY(lnglats, mcoords);
-    var time = 'draw time';
-    console.time(time);
     drawUtil.clip(cxt, xys, imageStr);
-    console.timeEnd(time);
     return canvas;
 };
 
